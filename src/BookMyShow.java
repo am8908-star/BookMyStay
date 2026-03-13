@@ -1,21 +1,31 @@
+import java.util.HashMap;
+import java.util.Map;
+class RoomInventory {
 
-abstract class Room {
+    private HashMap<String, Integer> inventory;
 
-    protected int beds;
-    protected int size;
-    protected double price;
+    public RoomInventory() {
+        inventory = new HashMap<>();
 
-    public Room(int beds, int size, double price) {
-        this.beds = beds;
-        this.size = size;
-        this.price = price;
+        // Initial room availability
+        inventory.put("Single Room", 10);
+        inventory.put("Double Room", 5);
+        inventory.put("Suite Room", 2);
     }
 
-    public void displayRoomDetails() {
-        System.out.println("Beds : " + beds);
-        System.out.println("Size : " + size + " sq.ft");
-        System.out.println("Price : $" + price);
+    public int getAvailability(String roomType) {
+        return inventory.getOrDefault(roomType, 0);
     }
 
-    public abstract String getRoomType();
+    public void updateAvailability(String roomType, int newCount) {
+        inventory.put(roomType, newCount);
+    }
+
+    public void displayInventory() {
+        System.out.println("\nCurrent Room Inventory:");
+
+        for (Map.Entry<String, Integer> entry : inventory.entrySet()) {
+            System.out.println(entry.getKey() + " : " + entry.getValue() + " rooms available");
+        }
+    }
 }
