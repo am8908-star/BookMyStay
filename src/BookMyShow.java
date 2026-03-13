@@ -1,31 +1,55 @@
-import java.util.HashMap;
 import java.util.Map;
-class RoomInventory {
 
-    private HashMap<String, Integer> inventory;
+class RoomSearchService {
 
-    public RoomInventory() {
-        inventory = new HashMap<>();
+    private RoomInventory inventory;
 
-        // Initial room availability
-        inventory.put("Single Room", 10);
-        inventory.put("Double Room", 5);
-        inventory.put("Suite Room", 2);
+    public RoomSearchService(RoomInventory inventory) {
+        this.inventory = inventory;
     }
 
-    public int getAvailability(String roomType) {
-        return inventory.getOrDefault(roomType, 0);
+    /**
+     * Displays available rooms and their details
+     */
+    public void searchAvailableRooms() {
+
+        System.out.println("\nAvailable Rooms:");
+
+        Map<String, Integer> data = inventory.getInventory();
+
+        for (Map.Entry<String, Integer> entry : data.entrySet()) {
+
+            String roomType = entry.getKey();
+            int available = entry.getValue();
+
+            // Defensive check: show only rooms with availability > 0
+            if (available > 0) {
+
+                Room room = createRoomObject(roomType);
+
+                if (room != null) {
+                    System.out.println("\nRoom Type: " + room.getRoomType());
+                    room.displayRoomDetails();
+                    System.out.println("Available Rooms: " + available);
+                }
+            }
+        }
     }
 
-    public void updateAvailability(String roomType, int newCount) {
-        inventory.put(roomType, newCount);
-    }
+    private Room createRoomObject(String type) {
 
-    public void displayInventory() {
-        System.out.println("\nCurrent Room Inventory:");
+        switch (type) {
+            case "Single Room":
+                return new SingleRoom();
 
-        for (Map.Entry<String, Integer> entry : inventory.entrySet()) {
-            System.out.println(entry.getKey() + " : " + entry.getValue() + " rooms available");
+            case "Double Room":
+                return new DoubleRoom();
+
+            case "Suite Room":
+                return new SuiteRoom();
+
+            default:
+                return null;
         }
     }
 }
