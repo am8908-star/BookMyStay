@@ -8,7 +8,112 @@ class Reservation {
         this.guestName = guestName;
         this.roomType = roomType;
     }
+import java.util.*;
 
+    class Reservation {
+        private String reservationId;
+        private String guestName;
+        private String roomType;
+
+        public Reservation(String reservationId, String guestName, String roomType) {
+            this.reservationId = reservationId;
+            this.guestName = guestName;
+            this.roomType = roomType;
+        }
+
+        public String getReservationId() {
+            return reservationId;
+        }
+
+        public String getGuestName() {
+            return guestName;
+        }
+
+        public String getRoomType() {
+            return roomType;
+        }
+    }
+
+    class AddOnService {
+        private String serviceName;
+        private double cost;
+
+        public AddOnService(String serviceName, double cost) {
+            this.serviceName = serviceName;
+            this.cost = cost;
+        }
+
+        public String getServiceName() {
+            return serviceName;
+        }
+
+        public double getCost() {
+            return cost;
+        }
+    }
+
+    class AddOnServiceManager {
+        private Map<String, List<AddOnService>> serviceMap;
+
+        public AddOnServiceManager() {
+            serviceMap = new HashMap<>();
+        }
+
+        public void addService(String reservationId, AddOnService service) {
+            serviceMap.putIfAbsent(reservationId, new ArrayList<>());
+            serviceMap.get(reservationId).add(service);
+        }
+
+        public double calculateTotalCost(String reservationId) {
+            double total = 0;
+            List<AddOnService> services = serviceMap.get(reservationId);
+
+            if (services != null) {
+                for (AddOnService s : services) {
+                    total += s.getCost();
+                }
+            }
+
+            return total;
+        }
+
+        public void displayServices(String reservationId) {
+            List<AddOnService> services = serviceMap.get(reservationId);
+
+            if (services == null || services.isEmpty()) {
+                System.out.println("No add-on services selected.");
+                return;
+            }
+
+            System.out.println("Services for Reservation " + reservationId + ":");
+            for (AddOnService s : services) {
+                System.out.println(s.getServiceName() + " - $" + s.getCost());
+            }
+
+            System.out.println("Total Add-On Cost: $" + calculateTotalCost(reservationId));
+        }
+    }
+
+    public class UseCase7AddOnServiceSelection {
+        public static void main(String[] args) {
+
+            System.out.println("Book My Stay Application v7.1");
+
+            Reservation r1 = new Reservation("R-101", "Alice", "Single Room");
+
+            AddOnService wifi = new AddOnService("WiFi", 10);
+            AddOnService breakfast = new AddOnService("Breakfast", 20);
+            AddOnService spa = new AddOnService("Spa", 50);
+
+            AddOnServiceManager manager = new AddOnServiceManager();
+
+            manager.addService(r1.getReservationId(), wifi);
+            manager.addService(r1.getReservationId(), breakfast);
+            manager.addService(r1.getReservationId(), spa);
+
+            manager.displayServices(r1.getReservationId());
+        }
+    }
     public String getGuestName() {
         return guestName;
     }
